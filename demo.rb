@@ -26,11 +26,9 @@ get '/hi' do
 	rec = TestRecord.new
 	rec.sector = 'test_sector'
 	rec.to_json	
-	if :development do
-		"development"
-	elsif :production
-		"production"
-	end
+
+	ENV['RACK_ENV']
+
 #	"greetings!"
 end
 
