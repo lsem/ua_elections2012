@@ -27,13 +27,6 @@ get '/hi' do
 	rec.sector = 'test_sector'
 	rec.to_json	
 
-	ENV['RACK_ENV']
-
-	if development? #do
-		"development"
-	else
-		"production"
-	end
-
+	"ENV: ${ENV['RACK_ENV']}"
 end
 
