@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require 'mongoid'
-#require "sinatra/reloader" if development?
+require "sinatra/reloader" if development?
 
 
 configure do
@@ -27,6 +27,6 @@ get '/hi' do
 	rec.sector = 'test_sector'
 	rec.to_json	
 
-	'ENV: #{ENV["RACK_ENV"]}'
+	"ENV: #{ENV['RACK_ENV']}"
 end
 
