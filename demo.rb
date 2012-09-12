@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require 'mongoid'
-require "sinatra/reloader" if development?
+#require "sinatra/reloader" if development?
 
 
 configure do
