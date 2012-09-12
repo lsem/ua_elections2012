@@ -1,6 +1,8 @@
+
+
 require 'sinatra'
 require 'mongoid'
-require "sinatra/reloader" if development?
+#require "sinatra/reloader" if development?
 
 
 configure do
@@ -22,8 +24,9 @@ end
 get '/hi' do
 	content_type :json
 	rec = TestRecord.new
-	rec.sector = 'test_sector'
+	rec.sector = 'test_sector'	
 	rec.to_json
+	:environment.to_s
 #	"greetings!"
 end
 
