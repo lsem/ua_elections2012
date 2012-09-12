@@ -26,7 +26,7 @@ get '/hi' do
 	rec = TestRecord.new
 	rec.sector = 'test_sector'	
 	rec.to_json	
-	:environment
+	:development
 #	"greetings!"
 end
 
