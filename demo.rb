@@ -24,9 +24,13 @@ end
 get '/hi' do
 	content_type :json
 	rec = TestRecord.new
-	rec.sector = 'test_sector'	
+	rec.sector = 'test_sector'
 	rec.to_json	
-	:development
+	if :development do
+		"development"
+	elsif :production
+		"production"
+	end
 #	"greetings!"
 end
 
