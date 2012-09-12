@@ -25,8 +25,8 @@ get '/hi' do
 	content_type :json
 	rec = TestRecord.new
 	rec.sector = 'test_sector'	
-	rec.to_json
-	:environment.to_s
+	rec.to_json	
+	:environment
 #	"greetings!"
 end
 
