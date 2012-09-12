@@ -1,3 +1,3 @@
-require "./demo.rb"
+require "./demo"
 
 run Sinatra::Application
