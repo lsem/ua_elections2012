@@ -66,8 +66,7 @@ test:
       <<: *default_session
       database: uaelect_test
 
-production:
-  <<: *defaults
+production:  
   sessions:
     default:
       <<: *default_session
