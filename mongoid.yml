@@ -67,6 +67,7 @@ test:
       database: uaelect_test
 
 production:  
+  <<: *defaults
   sessions:
     default:      
       uri: ENV['MONGOHQ_URL']
