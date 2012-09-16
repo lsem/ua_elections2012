@@ -15,6 +15,8 @@ class Vote
 	validates_presence_of :age_bracket
 	validates_presence_of :region
 	validates_presence_of :sub_region
+
+	index({ :party_id => 1}, { :unique => true})
 end
 
 class AgeResult
