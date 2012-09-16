@@ -1,0 +1,6 @@
+- fix warning in log
+- write unit test
+- test on huge dataset
+- write handlers for getting accumulated data
+- create index on data
+- improve data querying for getting only data for latest votes which then sumarize with previous
