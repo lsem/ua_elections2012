@@ -21,6 +21,8 @@ class AgeResult
 	include Mongoid::Document
 	has_one :result, :as => :resultable, :autosave => true
 	field :age_bracket, :type => Integer
+	
+	validates_presence_of :age_bracket
 end
 
 class TotalResult
@@ -32,6 +34,8 @@ class RegionResult
 	include Mongoid::Document
 	field :region_id, :type => Integer
 	has_one :result, :as => :resultable, :autosave => true
+	
+	validates_presence_of :region_id
 end
 
 class Result
