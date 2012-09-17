@@ -12,6 +12,8 @@ AGE_BRACKETS = [1, 2, 3, 4, 5, 6, 7]
 
 REGIONS = (1..24)
 
+SUB_REGIONS = (1..1500)
+
 module Errors
 	SUCCESS = 0
 	MANDATORY_PARAM_MISSING = -1
@@ -24,6 +26,13 @@ configure do
 	Mongoid.configure do |config|
 		Mongoid.load!('mongoid.yml')
 	end
+end
+
+module ResultType
+	TOTAL_VOTES = 1
+	AGE_VOTES = 2
+	REGION_VOTES = 3
+	SUBREGION_VOTES = 4
 end
 
 def export_age_results
