@@ -13,23 +13,20 @@ describe "Sinatra service" do
 		expect { FactoryGirl.create(:vote) }.to change {Vote.count}.by(1)
 	end
 
-	it "should do results exporting right" do
-		#pending "temporary disabled"
-		expect { 
-			FactoryGirl.create(:vote)
-			export_total_results()
-		}.to change {TotalResult.count}.by(PARTIES.count)
+	it "should export result properly" do
+		# save current count
+		total_results_count = PredefinedResult.total.count
+		age_results_count = PredefinedResult.age.count
+		region_results_count = PredefinedResult.region.count
 
-		expect { 
-			FactoryGirl.create(:vote)
-			export_age_results()
-		}.to change {AgeResult.count}.by(PARTIES.count * AGE_BRACKETS.count)
+		puts "total_results_count: #{total_results_count}"
+		puts "age_results_count: #{age_results_count}"
 
-		expect {
-			FactoryGirl.create(:vote)
-			export_regions_results()
-		}.to change {RegionResult.count}.by(PARTIES.count * REGIONS.count)
-
+		FactoryGirl.create(:vote)
+		export_total_results()
+		PredefinedResult.total.count.should be_equal(total_results_count + 1)
+		PredefinedResult.age.count.should be_equal(age_results_count) # should not be changed
+		PredefinedResult.region.count.should be_equal(region_results_count) # should not be changed	
 	end
 
 end

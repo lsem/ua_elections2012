@@ -28,39 +28,40 @@ configure do
 	end
 end
 
-module ResultType
-	TOTAL_VOTES = 1
-	AGE_VOTES = 2
-	REGION_VOTES = 3
-	SUBREGION_VOTES = 4
-end
-
 def export_age_results
 	# for each party get available results at the moment
+	results = {}
 	PARTIES.each do |pid|
 		# for each age bracket get votes count for given party id (pid)
+		results[pid] = {}
 		AGE_BRACKETS.each do |ab|
-			vcount = Vote.where(:party_id => pid).and(:age_bracket => ab).count
-			AgeResult.create(:age_bracket => ab, :result => Result.new(:party_id => pid, :votes => vcount))
+			vcount = Vote.where(:party_id => pid).and(:age_bracket => ab).count			
+			results[pid][ab] = vcount
 		end
 	end
+	PredefinedResult.create(:result_type => ResultType::AGE, :document_string => results.to_json)	
 end
 
 def export_regions_results
 	# for each party get availabe results at the moment 
+	results = {}
 	PARTIES.each do |pid|
+		results[pid] = {}
 		REGIONS.each do |rid|
 			vcount = Vote.where(:party_id => pid).and(:region => rid).count
-			RegionResult.create(:region_id => rid, :result => Result.new(:party_id => pid, :votes => vcount))
+			results[pid][rid] = vcount
 		end
-	end
+	end	
+	PredefinedResult.create(:result_type => ResultType::REGION, :document_string => results.to_json)
 end
 
 def export_total_results
+	results = {}
 	PARTIES.each do |pid|
 		vcount = Vote.where(:party_id => pid).count
-		TotalResult.create(:result => Result.new(:party_id => pid, :votes => vcount))
+		results[pid] = vcount		
 	end
+	PredefinedResult.create(:result_type => ResultType::TOTAL, :document_string => results.to_json)
 end
 
 

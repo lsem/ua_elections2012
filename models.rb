@@ -31,37 +31,26 @@ class Vote
 	
 end
 
-class AgeResult
-	include Mongoid::Document
-	has_one :result, :as => :resultable, :autosave => true
-	field :age_bracket, :type => Integer
-	
-	validates_presence_of :age_bracket
+module ResultType
+	TOTAL = 0
+	AGE = 1
+	REGION = 2
+	SUBREGION = 3
 end
 
-class TotalResult
-	include Mongoid::Document
-	has_one :result, :as => :resultable, :autosave => true
-end
-
-class RegionResult
-	include Mongoid::Document
-	field :region_id, :type => Integer
-	has_one :result, :as => :resultable, :autosave => true
-	
-	validates_presence_of :region_id
-end
-
-class Result
+class PredefinedResult
 	include Mongoid::Document
 	include Mongoid::Timestamps
-	
-	belongs_to :resultable, :polymorphic => true
 
-	field :party_id, :type => Integer
-	field :votes, :type => Integer
+	field :document_string, :type => String
+	field :result_type, :type => Integer
 
-	validates_presence_of :party_id
-	validates_presence_of :votes
+	validates_presence_of :document_string
+	validates_inclusion_of :result_type, :in => [ResultType::TOTAL, ResultType::AGE, 
+																							ResultType::REGION, ResultType::SUBREGION]
+
+	scope :total, where(:result_type => ResultType::TOTAL)
+	scope :age, where(:result_type => ResultType::AGE)
+	scope :region, where(:result_type => ResultType::REGION)
+	scope :subregion, where(:result_type => ResultType::SUBREGION)
 end
-
