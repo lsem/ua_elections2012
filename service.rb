@@ -1,17 +1,15 @@
-#require 'rubygems'
+require 'rubygems'
 require 'sinatra'
 require 'mongoid'
 require 'digest'
-require 'JSON'
+require 'json'
 require "sinatra/reloader" if development?
-require './models.rb'
+require './models'
 
 PARTIES = (1..22)
 
-# age brackets 
 AGE_BRACKETS = [1, 2, 3, 4, 5, 6, 7]
 
-# regions 
 REGIONS = (1..24)
 
 module Errors
@@ -27,6 +25,39 @@ configure do
 		Mongoid.load!('mongoid.yml')
 	end
 end
+
+def export_age_results
+	# for each party get available results at the moment
+	PARTIES.each do |pid|
+		# for each age bracket get votes count for given party id (pid)
+		AGE_BRACKETS.each do |ab|
+			vcount = Vote.where(:party_id => pid).and(:age_bracket => ab).count
+			AgeResult.create(:age_bracket => ab, :result => Result.new(:party_id => pid, :votes => vcount))
+		end
+	end
+end
+
+def export_regions_results
+	# for each party get availabe results at the moment 
+	PARTIES.each do |pid|
+		REGIONS.each do |rid|
+			vcount = Vote.where(:party_id => pid).and(:region => rid).count
+			RegionResult.create(:region_id => rid, :result => Result.new(:party_id => pid, :votes => vcount))
+		end
+	end
+end
+
+def export_total_results
+	PARTIES.each do |pid|
+		vcount = Vote.where(:party_id => pid).count
+		TotalResult.create(:result => Result.new(:party_id => pid, :votes => vcount))
+	end
+end
+
+
+# ==========================================================
+#     handlers 
+# ==========================================================
 
 get '/hi' do
 	content_type :json
@@ -46,15 +77,11 @@ get '/vote' do
 	age_bracket = params[:age_bracket]
 	region_id = params[:region_id]
 
-	unless phone_id and phone_num and party_id and age_bracket
+	unless phone_id and phone_num and party_id and age_bracket and region_id
 		'{ "status" : #{Errors::MANDATORY_PARAM_MISSING} }'
 	else
-		voter_hash = Digest::SHA1.hexdigest(phone_id.to_s + phone_num.to_s)
-		voter = Vote.find_by(:voter_hash => voter_hash)
-		voter ||= Vote.new(:voter_hash => voter_hash, :age_bracket => age_bracket)
-		voter.party_id = party_id
-		voter.save
-		"your hash is: #{voter_hash}"
+		Vote.create_vote(phone_num, phone_id, party_id, age_bracket, region_id)
+		'{ "status" : "success" }'
 	end
 end
 
@@ -70,7 +97,6 @@ get '/admin/:command' do |command|
 	end
 	"{ \"status\" : #{status} }"
 end 
-
 
 # statistic for parties by age
 # returns -2 in case of missing party id
@@ -115,7 +141,6 @@ get '/stat/general' do
 	"{ \"votes_count\": #{Vote.all.count}, \"details\" : #{party_votes.to_json}}"
 end
 
-
 get '/errormsg/:id' do |eid|
 	content_type :json	
 	message = case eid.to_i
@@ -127,34 +152,6 @@ get '/errormsg/:id' do |eid|
 			"unknown error"
 		end
 	return "{ \"#{message}\" }"
-end
-
-def export_age_results
-	# for each party get available results at the moment
-	PARTIES.each do |pid|
-		# for each age bracket get votes count for given party id (pid)
-		AGE_BRACKETS.each do |ab|
-			vcount = Vote.where(:party_id => pid).and(:age_bracket => ab).count
-			AgeResult.create(:age_bracket => ab, :result => Result.new(:party_id => pid, :votes => vcount))
-		end
-	end
-end
-
-def export_regions_results
-	# for each party get availabe results at the moment 
-	PARTIES.each do |pid|
-		REGIONS.each do |rid|
-			vcount = Vote.where(:party_id => pid).and(:region => rid).count
-			RegionResult.create(:region_id => rid, :result => Result.new(:party_id => pid, :votes => vcount))
-		end
-	end
-end
-
-def export_total_results
-	PARTIES.each do |pid|
-		vcount = Vote.where(:party_id => pid).count
-		TotalResult.create(:result => Result.new(:party_id => pid, :votes => vcount))
-	end
 end
 
 get '/export_results/:kind' do |kind|

@@ -1,3 +1,3 @@
-require "./demo"
+require "./service"
 
 run Sinatra::Application

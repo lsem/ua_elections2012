@@ -4,3 +4,4 @@
 - write handlers for getting accumulated data
 - create index on data
 - improve data querying for getting only data for latest votes which then sumarize with previous
+- add logging
