@@ -25,8 +25,22 @@ describe "Sinatra service" do
 		PredefinedResult.region.count.should be_equal(region_results_count + 1) # should not be changed	
 	end
 
-	it "should reject unknown commands" do
+	it "vote should return fail without mandatory params provided" do
+
+		post '/vote'
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"
+
+		post '/vote', "phone_id" => "ABCDEFG"
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"		
 	end
 
+	it "vote should return success in case all mandatory parameters provided" do
+		pending "temporarly disabled"	
+		post "/vote", "phone_id" => "ABCDEFG", "party_id" => "2", "region_id" => "1", "sub_region_id" => "3", "age_id" => "100"
+
+		last_response.body.should include  "#{Errors::SUCCESS}"
+	end
 
 end

@@ -84,11 +84,12 @@ post '/vote' do
 	party_id = params[:party_id]
 	age_bracket = params[:age_bracket]
 	region_id = params[:region_id]
+	sub_region_id = params[:sub_region_id]
 
-	unless phone_id and phone_num and party_id and age_bracket and region_id
+	unless phone_id and party_id and age_bracket and region_id and sub_region_id
 		"{ \"status\" : #{Errors::MANDATORY_PARAM_MISSING} }"
 	else
-		Vote.create_vote(phone_num, phone_id, party_id, age_bracket, region_id)
+		Vote.create_vote(phone_id, party_id, age_bracket, region_id, sub_region_id)
 		"{ \"status\" : #{Errors::SUCCESS} }"
 	end
 end
