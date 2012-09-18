@@ -78,6 +78,8 @@ get '/hi' do
 	end
 end
 
+
+
 get '/vote' do
 	content_type :json
 
@@ -184,4 +186,10 @@ get '/export_results/:kind' do |kind|
 		statcode = Errors::EXPORT_ERROR
 	end
 	"{ \"status\" : #{statcode} }"
+end
+
+
+get '/results' do
+	content_type :json
+	PredefinedResult.region.first.document_string
 end

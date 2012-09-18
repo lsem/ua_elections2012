@@ -24,9 +24,11 @@ describe "Sinatra service" do
 
 		FactoryGirl.create(:vote)
 		export_total_results()
+		export_regions_results()
+
 		PredefinedResult.total.count.should be_equal(total_results_count + 1)
 		PredefinedResult.age.count.should be_equal(age_results_count) # should not be changed
-		PredefinedResult.region.count.should be_equal(region_results_count) # should not be changed	
+		PredefinedResult.region.count.should be_equal(region_results_count + 1) # should not be changed	
 	end
 
 end

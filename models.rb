@@ -54,3 +54,6 @@ class PredefinedResult
 	scope :region, where(:result_type => ResultType::REGION)
 	scope :subregion, where(:result_type => ResultType::SUBREGION)
 end
+
+
+

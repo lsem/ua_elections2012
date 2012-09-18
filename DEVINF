@@ -1,0 +1,48 @@
+
+
+=begin
+
+vote
+================================
+method: 
+	post
+
+url: 
+	/vote
+
+params: 	
+	party_id
+	voter_hash
+	age_bracket
+	region_id
+	sub_region_id	
+
+respnse:
+	{ "status" : 0 }
+
+
+results
+================================
+method: 
+	get
+url:
+	/results/:kind
+	kind = (total, age, region, subregion)
+response:
+
+	region/age/subregion
+	{"1":{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0,"14":0,"15":0,"16":0,"17":0,"18":0,"19":0,"20":0,"21":0,"22":0,"23":0,"24":0},"2":{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0,"14":0,"15":0,"16":0,"17":0,"18":0,"19":0,"20":0,"21":0,"22":0,"23":0,"24":0}}	
+	total:
+	{"1" : 10, "2" : 200 }...
+
+
+module Errors
+	SUCCESS = 0
+	MANDATORY_PARAM_MISSING = -1
+	MISSING_ID_PARAM = -2
+	UNKNOWN_COMMAND = -3
+	EXPORT_ERROR = -5
+end
+
+=end
+
