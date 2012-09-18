@@ -3,12 +3,6 @@ require 'factory_girl'
 
 describe "Sinatra service" do 
 	
-	it "should respond to 'GET hi'" do
-		get '/hi'
-		last_response.should be_ok
-		last_response.body.should match(/env.:*/)
-	end
-
 	it "should insert votes properly" do
 		expect { FactoryGirl.create(:vote) }.to change {Vote.count}.by(1)
 	end
@@ -30,5 +24,9 @@ describe "Sinatra service" do
 		PredefinedResult.age.count.should be_equal(age_results_count) # should not be changed
 		PredefinedResult.region.count.should be_equal(region_results_count + 1) # should not be changed	
 	end
+
+	it "should reject unknown commands" do
+	end
+
 
 end

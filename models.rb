@@ -1,5 +1,12 @@
 
 
+module ResultType
+	TOTAL = 0
+	AGE = 1
+	REGION = 2
+	SUBREGION = 3
+end
+
 class Vote
 	include Mongoid::Document
 	include Mongoid::Timestamps # adds created_at, updated_at fields
@@ -19,8 +26,7 @@ class Vote
 	index({ :party_id => 1}, { :unique => true})
 
 	def self.create_vote(args)
-		voter_hash = Digest::SHA1.hexdigest(args[:phone_id].to_s + args[:phone_num].to_s)
-		vote = Vote.new :voter_hash => voter_hash		
+		vote = Vote.new :voter_hash => args[:phone_id]
 		vote.age_bracket = args[:age_bracket]
 		vote.region_id = args[:region_id]
 		vote.sub_region_id = args[:sub_region_id]
@@ -29,13 +35,6 @@ class Vote
 		vote
 	end
 	
-end
-
-module ResultType
-	TOTAL = 0
-	AGE = 1
-	REGION = 2
-	SUBREGION = 3
 end
 
 class PredefinedResult
@@ -47,13 +46,12 @@ class PredefinedResult
 
 	validates_presence_of :document_string
 	validates_inclusion_of :result_type, :in => [ResultType::TOTAL, ResultType::AGE, 
-																							ResultType::REGION, ResultType::SUBREGION]
+												ResultType::REGION, ResultType::SUBREGION]
 
 	scope :total, where(:result_type => ResultType::TOTAL)
 	scope :age, where(:result_type => ResultType::AGE)
 	scope :region, where(:result_type => ResultType::REGION)
 	scope :subregion, where(:result_type => ResultType::SUBREGION)
 end
-
 
 
