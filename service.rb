@@ -6,6 +6,7 @@ require 'json'
 require './models'
 require "sinatra/reloader" if development?
 
+EXPORT_RESULTS_PERIOD_SEC = 600
 
 PARTIES = (1..22)
 REGIONS = (1..24)
@@ -36,7 +37,7 @@ def export_age_results
 			results[pid][ab] = vcount
 		end
 	end
-	PredefinedResult.create(:result_type => ResultType::AGE, :document_string => results.to_json)	
+	PredefinedResult.create(:result_type => ResultType::AGE, :document_string => results.to_json)
 end
 
 def export_regions_results
@@ -96,16 +97,22 @@ end
 
 get '/export_results' do
 	content_type :json
-
-	logger.info "[export_results] exporting age results"
-	export_age_results
-	logger.info "[export_results] exporting total results"
-	export_total_results
-	logger.info "[export_results] exporting region results"
-	export_regions_results
-	logger.info "[export_results] exporting subregion results"
-	export_subregion_results
-	logger.info "[export_results] export_results done"
+	last_update = PredefinedResult.last.created_at
+	time_passed = Time.now - last_update
+	logger.info "time passed (seconds): #{time_passed}"
+	if ( time_passed >= EXPORT_RESULTS_PERIOD_SEC)
+		logger.info "[export_results] exporting age results"
+		export_age_results
+		logger.info "[export_results] exporting total results"
+		export_total_results
+		logger.info "[export_results] exporting region results"
+		export_regions_results
+		logger.info "[export_results] exporting subregion results"
+		export_subregion_results
+		logger.info "[export_results] export_results done"	 	
+	 else
+	 	logger.info "results are actual. next export can be done only at: #{last_update + EXPORT_RESULTS_PERIOD_SEC}"
+	 end
 end
 
 get '/results/:kind' do |kind|
