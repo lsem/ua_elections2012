@@ -6,18 +6,19 @@ require 'json'
 require './models'
 require "sinatra/reloader" if development?
 
-EXPORT_RESULTS_PERIOD_SEC = 600
+EXPORT_RESULTS_PERIOD_SEC = 10
 
 PARTIES = (1..22)
 REGIONS = (1..24)
 AGE_BRACKETS = (1..7)
-SUB_REGIONS = (1..1500)
+SUB_REGIONS = (1..150)
 
 module Errors
 	SUCCESS = 0
 	MANDATORY_PARAM_MISSING = -1
 	UNKNOWN_COMMAND = -2
 	INVALID_RESULT_TYPE = -3
+	ACTUAL = -4
 end
 
 configure do
@@ -97,10 +98,13 @@ end
 
 get '/export_results' do
 	content_type :json
+	status_code = Errors::SUCCESS
 	last_update = PredefinedResult.last.created_at
 	time_passed = Time.now - last_update
+	p time_passed
+	p EXPORT_RESULTS_PERIOD_SEC
 	logger.info "time passed (seconds): #{time_passed}"
-	if ( time_passed >= EXPORT_RESULTS_PERIOD_SEC)
+	if time_passed >= EXPORT_RESULTS_PERIOD_SEC
 		logger.info "[export_results] exporting age results"
 		export_age_results
 		logger.info "[export_results] exporting total results"
@@ -112,7 +116,9 @@ get '/export_results' do
 		logger.info "[export_results] export_results done"	 	
 	 else
 	 	logger.info "results are actual. next export can be done only at: #{last_update + EXPORT_RESULTS_PERIOD_SEC}"
+	 	status_code = Errors::ACTUAL
 	 end
+	 "{\"status\" : #{status_code}}"
 end
 
 get '/results/:kind' do |kind|

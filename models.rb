@@ -24,6 +24,7 @@ class Vote
 	validates_presence_of :sub_region_id
 
 	index({ :party_id => 1}, { :unique => true})
+	#index({ :party_id => 1, :subregion => 1}, {})
 
 	def self.create_vote(args)
 		vote = Vote.new :voter_hash => args[:phone_id]
