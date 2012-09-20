@@ -70,4 +70,6 @@ production:
   <<: *defaults
   sessions:
     default:      
-      uri: ENV['MONGOHQ_URL']
+      #<<: *default_session
+      #databse: uaelect_dev3
+      uri: <%= ENV['MONGOLAB_URI'] %>

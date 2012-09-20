@@ -98,13 +98,17 @@ end
 
 get '/export_results' do
 	content_type :json
+	logger.info "export results command has been triggered"
 	status_code = Errors::SUCCESS
-	last_update = PredefinedResult.last.created_at
-	time_passed = Time.now - last_update
-	p time_passed
-	p EXPORT_RESULTS_PERIOD_SEC
-	logger.info "time passed (seconds): #{time_passed}"
-	if time_passed >= EXPORT_RESULTS_PERIOD_SEC
+
+	can_update = true
+	if PredefinedResult.count > 0
+		last_update = PredefinedResult.last.created_at
+		time_passed = Time.now - last_update
+		logger.info "time passed (seconds): #{time_passed}"
+		can_update = time_passed >= EXPORT_RESULTS_PERIOD_SEC
+	end
+	if can_update
 		logger.info "[export_results] exporting age results"
 		export_age_results
 		logger.info "[export_results] exporting total results"
