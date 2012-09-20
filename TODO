@@ -2,3 +2,4 @@
 - write unit test
 - test on huge dataset
 - create index on data
+- check database capacity to be sure that 0.5GB is enough for our loads.
