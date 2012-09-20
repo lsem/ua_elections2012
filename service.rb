@@ -2,9 +2,11 @@ require 'rubygems'
 require 'sinatra'
 require 'mongoid'
 require 'digest'
+require 'haml'
 require 'json'
 require './models'
 require "sinatra/reloader" if development?
+
 
 EXPORT_RESULTS_PERIOD_SEC = 10
 
@@ -149,7 +151,11 @@ get '/admin/:command' do |command|
 	content_type :json
 	status = Errors::SUCCESS
 	case command.to_sym
-	when :cleardb then Vote.delete_all
+	when :clear_votes then Vote.delete_all
+	when :clear_results then PredefinedResult.delete_all
+	when :clear_all 
+		PredefinedResult.delete_all
+		Vote.delete_all
 	else
 		status = Errors::UNKNOWN_COMMAND
 	end
