@@ -129,14 +129,14 @@ get '/results/:kind' do |kind|
 	content_type :json
 	
 	case kind.to_sym
-	when :total 
-		return PredefinedResult.total.last.document_string
+	when :total
+		return PredefinedResult.total.last.document_string if PredefinedResult.total.last
 	when :age
-		return PredefinedResult.age.last.document_string
+		return PredefinedResult.age.last.document_string if PredefinedResult.age.last
 	when :region
-		return PredefinedResult.region.last.document_string
+		return PredefinedResult.region.last.document_string if PredefinedResult.region.last
 	when :subregion
-		return PredefinedResult.subregion.last.document_string
+		return PredefinedResult.subregion.last.document_string if PredefinedResult.subregion.last
 	end
 	return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}"
 end
