@@ -34,6 +34,10 @@ describe "Sinatra service" do
 		post '/vote', "phone_id" => "ABCDEFG"
 		last_response.should be_ok
 		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"		
+
+		params = {:phone_id => "ABCDEFG", :party_id => "1", 
+				:age_bracket => "2", :region_id => "4", :sub_region_id => "4"}
+			
 	end
 
 	it "vote should return success in case all mandatory parameters provided" do
@@ -42,5 +46,7 @@ describe "Sinatra service" do
 
 		last_response.body.should include  "#{Errors::SUCCESS}"
 	end
+
+
 
 end
