@@ -79,7 +79,7 @@ end
 #     handlers 
 # ==========================================================
 
-post '/vote' do
+get '/vote' do
 	content_type :json
 
 	phone_id = params[:phone_id]
