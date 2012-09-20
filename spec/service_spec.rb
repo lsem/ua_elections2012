@@ -27,14 +27,13 @@ describe "Sinatra service" do
 	end
 
 	it "vote should return fail without mandatory params provided" do
-
 		post '/vote'
 		last_response.should be_ok
 		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"
 
 		post '/vote', "phone_id" => "ABCDEFG"
 		last_response.should be_ok
-		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"		
+		last_response.body.should include "#{Errors::MANDATORY_PARAM_MISSING}"
 
 		params = {:phone_id => "ABCDEFG", :party_id => "1", 
 				:age_bracket => "2", :region_id => "4", :sub_region_id => "4"}

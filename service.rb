@@ -15,10 +15,11 @@ SUB_REGIONS = (1..1500)
 
 module Errors
 	SUCCESS = 0
-	MANDATORY_PARAM_MISSING = -1
+	MANDATORY_PARAM_MISSING = -1	
 	UNKNOWN_COMMAND = -2
 	INVALID_RESULT_TYPE = -3
 	ACTUAL = -4
+	INVALID_PARAM_VALUES = -5
 end
 
 configure do
@@ -81,19 +82,23 @@ end
 
 get '/vote' do
 	content_type :json
+	votes_mandatory_params = [:phone_id, :party_id, :age_bracket, :region_id, :sub_region_id ]
 
-	phone_id = params[:phone_id]
-	party_id = params[:party_id]
-	age_bracket = params[:age_bracket]
-	region_id = params[:region_id]
-	sub_region_id = params[:sub_region_id]
-
-	unless phone_id and party_id and age_bracket and region_id and sub_region_id
-		"{ \"status\" : #{Errors::MANDATORY_PARAM_MISSING} }"
-	else
-		Vote.create_vote(phone_id, party_id, age_bracket, region_id, sub_region_id)
-		"{ \"status\" : #{Errors::SUCCESS} }"
+	# check whether all mandatory parameters are set	
+	votes_mandatory_params.each do |p| 
+		unless params[p]
+			return "{ \"status\" : #{Errors::MANDATORY_PARAM_MISSING} }"
+		end
 	end
+	
+	status_code = Errors::SUCCESS	
+	vote = Vote.create_vote(params, false) # false flag passed to prevent of saving
+	if vote.valid?
+		vote.save
+	else
+		status_code = Errors::INVALID_PARAM_VALUES
+	end		
+	"{ \"status\" : #{status_code} }"
 end
 
 get '/export_results' do
