@@ -19,9 +19,10 @@ describe "Sinatra service" do
 		FactoryGirl.create(:vote)
 		export_total_results()
 		export_regions_results()
+		export_age_results()
 
 		PredefinedResult.total.count.should be_equal(total_results_count + 1)
-		PredefinedResult.age.count.should be_equal(age_results_count) # should not be changed
+		PredefinedResult.age.count.should be_equal(age_results_count + 1) # should not be changed
 		PredefinedResult.region.count.should be_equal(region_results_count + 1) # should not be changed	
 	end
 
@@ -37,7 +38,7 @@ describe "Sinatra service" do
 
 		params = {:phone_id => "ABCDEFG", :party_id => "1", 
 				:age_bracket => "2", :region_id => "4", :sub_region_id => "4"}
-			
+
 	end
 
 	it "vote should return success in case all mandatory parameters provided" do

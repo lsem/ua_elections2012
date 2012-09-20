@@ -134,9 +134,10 @@ get '/results/:kind' do |kind|
 	when :region then PredefinedResult.region.last
 	when :subregion then PredefinedResult.subregion.last
 	else
-		return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}"
+		return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}}"
 	end
-	last_result ? last_result.document_string : "{}"
+	result_data = last_result ? last_result.document_string : "{}"
+	"{\"status\" : #{Errors::SUCCESS}, \"data\" : #{result_data}}"
 end
 
 get '/admin/:command' do |command|
