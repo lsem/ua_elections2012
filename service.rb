@@ -128,17 +128,16 @@ end
 get '/results/:kind' do |kind|
 	content_type :json
 	
-	case kind.to_sym
-	when :total
-		return PredefinedResult.total.last.document_string if PredefinedResult.total.last
-	when :age
-		return PredefinedResult.age.last.document_string if PredefinedResult.age.last
-	when :region
-		return PredefinedResult.region.last.document_string if PredefinedResult.region.last
-	when :subregion
-		return PredefinedResult.subregion.last.document_string if PredefinedResult.subregion.last
+	last_result = nil
+	last_result = case kind.to_sym
+	when :total then PredefinedResult.total.last
+	when :age then PredefinedResult.age.last
+	when :region then last_result = PredefinedResult.region.last
+	when :subregion then last_result = PredefinedResult.subregion.last
+	else
+		return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}"
 	end
-	return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}"
+	last_result? last_result.document_string : "{}"
 end
 
 get '/admin/:command' do |command|
