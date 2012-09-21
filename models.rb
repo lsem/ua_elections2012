@@ -26,13 +26,14 @@ class Vote
 	index({ :party_id => 1}, { :unique => true})
 	#index({ :party_id => 1, :subregion => 1}, {})
 
-	def self.create_vote(args, auto_save = true)
-		vote = Vote.find_by(:voter_hash => args[:phone_id])
+	def self.create_vote(args, auto_save = true)		
+		vote = Vote.where(:voter_hash => args[:phone_id]).first
 		vote ||= Vote.new(:voter_hash => args[:phone_id])
 		vote.age_bracket = args[:age_bracket]
 		vote.region_id = args[:region_id]
 		vote.sub_region_id = args[:sub_region_id]
 		vote.party_id = args[:party_id]
+		p "your vote is: #{vote.inspect}"
 		vote.save if auto_save
 		vote
 	end
