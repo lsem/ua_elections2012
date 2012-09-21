@@ -41,7 +41,6 @@ class Vote
 		vote.region_id = args[:region_id]
 		vote.sub_region_id = args[:sub_region_id]
 		vote.party_id = args[:party_id]
-		p "your vote is: #{vote.inspect}"
 		vote.save if auto_save
 		vote
 	end

@@ -26,13 +26,16 @@ module Errors
 end
 
 configure do
-	Mongoid.configure do |config|		
-		mongo_uri = URI.parse(ENV["MONGOLAB_URI"])
-		ENV['MONGOID_HOST'] = mongo_uri.host
-		ENV['MONGOID_PORT'] = mongo_uri.port.to_s
-		ENV['MONGOID_USERNAME'] = mongo_uri.user
-		ENV['MONGOID_PASSWORD'] = mongo_uri.password
-		ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
+	Mongoid.configure do |config|
+		puts "your env is: #{ENV['RACK_ENV']}"
+		if production?
+			mongo_uri = URI.parse(ENV["MONGOLAB_URI"])		
+			ENV['MONGOID_HOST'] = mongo_uri.host
+			ENV['MONGOID_PORT'] = mongo_uri.port.to_s
+			ENV['MONGOID_USERNAME'] = mongo_uri.user
+			ENV['MONGOID_PASSWORD'] = mongo_uri.password
+			ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
+		end
 		p ENV
 		Mongoid.load!('mongoid.yml')
 	end
