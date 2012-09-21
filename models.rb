@@ -23,8 +23,16 @@ class Vote
 	validates_presence_of :region_id
 	validates_presence_of :sub_region_id
 
+	validates_numericality_of :party_id
+	validates_numericality_of :age_bracket
+	validates_numericality_of :region_id
+	validates_numericality_of :sub_region_id
+
+	 
 	index({ :party_id => 1}, { :unique => true})
-	#index({ :party_id => 1, :subregion => 1}, {})
+	index({ :party_id => 1, :age_bracket => 1}, {})
+	index({ :party_id => 1, :region_id => 1}, {})
+	index({ :party_id => 1, :sub_region_id => 1}, {})
 
 	def self.create_vote(args, auto_save = true)		
 		vote = Vote.where(:voter_hash => args[:phone_id]).first
@@ -56,5 +64,4 @@ class PredefinedResult
 	scope :region, where(:result_type => ResultType::REGION)
 	scope :subregion, where(:result_type => ResultType::SUBREGION)
 end
-
 
