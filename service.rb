@@ -4,6 +4,7 @@ require 'mongoid'
 require 'digest'
 require 'haml'
 require 'json'
+require 'uri'
 require './models'
 require "sinatra/reloader" if development?
 
@@ -25,7 +26,14 @@ module Errors
 end
 
 configure do
-	Mongoid.configure do |config|
+	Mongoid.configure do |config|		
+		mongo_uri = URI.parse(ENV["MONGOLAB_URI"])
+		ENV['MONGOID_HOST'] = mongo_uri.host
+		ENV['MONGOID_PORT'] = mongo_uri.port.to_s
+		ENV['MONGOID_USERNAME'] = mongo_uri.user
+		ENV['MONGOID_PASSWORD'] = mongo_uri.password
+		ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
+		p ENV
 		Mongoid.load!('mongoid.yml')
 	end
 end

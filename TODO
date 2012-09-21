@@ -4,3 +4,4 @@
 - check database capacity to be sure that 0.5GB is enough for our loads.
 - fix warning: 'ollection#group no longer take a list of parameters. This usage is deprecated and will be remove in v2.0.'
 - investigage indices
+- add timestamp to results response
