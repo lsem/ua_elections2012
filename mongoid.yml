@@ -60,27 +60,12 @@ development: &defaults
     # use_utc: false
 
 test:
-  <<: *defaults
-  sessions:
-    default:
-      <<: *default_session
-      database: uaelect_test
+  <<: *default_session
+  database: uaelect_test
 
 production:  
-  <<: *defaults
-  sessions:
-    default:      
-      #<<: *default_session
-      #databse: uaelect_dev3
-      # <%= mongo_uri =URI.parse(ENV["MONGOLAB_URI"]) %>
-      # host: <%= mongo_uri.host %>
-      # port: <%= mongo_uri.port.to_s %>
-      # username: <%= mongo_uri.user %>
-      # password: <%= mongo_uri.password %>
-      # database: <%= mongo_uri.path.gsub("/", "") %>
-      host: <%= ENV['MONGOID_HOST'] %>
-      port: <%= ENV['MONGOID_PORT'] %>
-      username: <%= ENV['MONGOID_USERNAME'] %>
-      password: <%= ENV['MONGOID_PASSWORD'] %>
-      database: <%= ENV['MONGOID_DATABASE'] %>
-      #uri: <%= ENV['MONGOLAB_URI'] %>
+  host: <%= ENV['MONGOID_HOST'] %>
+  port: <%= ENV['MONGOID_PORT'] %>
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: <%= ENV['MONGOID_DATABASE'] %>
