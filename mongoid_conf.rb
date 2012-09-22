@@ -9,7 +9,7 @@ def configure_mongoid(force_environment_mode = nil)
 	Mongoid.configure do |config|
 		p ENV
 		puts "your env is: #{ENV['RACK_ENV']}"
-		unless force_environment_mode
+		if force_environment_mode
 			production_env = ENV['RACK_ENV'] == :production	
 		else
 			production_env = production?
