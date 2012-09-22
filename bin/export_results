@@ -1,4 +1,29 @@
 #!/usr/bin/env ruby
+#------------------------------------------------
+# Script for exporting accumulated results to 
+# results table. Typically is run by scheduler.
+#------------------------------------------------
+
+require 'mongoid'
+require './mongoid_conf'
+require './results_exporting'
 
 puts "environment: #{ENV.inspect}"
 
+puts "> configuring mongo access driver.."
+
+configure_mongoid(:production)
+
+puts "> mongo seems to be configured."
+
+puts "> exporting total results.. "
+export_total_results
+
+puts "> exporting age results.. "
+export_age_results
+
+puts "> exporting regions results.. "
+export_regions_results
+
+puts "> exporting subregions results.. "
+export_subregion_results
