@@ -88,10 +88,19 @@ get '/results/:kind' do |kind|
 	when :region then PredefinedResult.region.last
 	when :subregion then PredefinedResult.subregion.last
 	else
-		return "{ \"status\" : #{Errors::INVALID_RESULT_TYPE}}"
+		return JSON.generate(:status => Errors::INVALID_RESULT_TYPE)
 	end
-	result_data = last_result ? last_result.document_string : "{}"
-	"{\"status\" : #{Errors::SUCCESS}, \"data\" : #{result_data}}"
+	
+	response = "{\"status\" : #{Errors::SUCCESS} }" 
+	unless last_result
+		# in case nothing of results just return status
+		response = JSON.generate(:status => Errors::SUCCESS)
+	else
+		document = JSON.parse(last_result.document_string)
+		response = JSON.generate(:status => Errors::SUCCESS,
+				:timestamp => last_result.created_at, :data => document)
+	end
+	return response
 end
 
 get '/admin/:command' do |command|
