@@ -23,6 +23,7 @@ def configure_mongoid(force_environment_mode = nil)
 			ENV['MONGOID_PASSWORD'] = mongo_uri.password
 			ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
 		end
+		Mongoid.logger.level = Logger::WARNING
 		Mongoid.load!('mongoid.yml')
 	end
 end
