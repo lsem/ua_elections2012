@@ -5,10 +5,15 @@ def configure_mongoid(force_environment_mode = nil)
 	if force_environment_mode
 		ENV['RACK_ENV'] ||= force_environment_mode.to_s
 	end
+
 	Mongoid.configure do |config|
 		p ENV
 		puts "your env is: #{ENV['RACK_ENV']}"
-		production_env = ENV['RACK_ENV'] == :production
+		unless force_environment_mode
+			production_env = production?
+		else
+			production_env = ENV['RACK_ENV'] == :production	
+		end
 		puts "(dbg) production_env: #{production_env}"
 		if production_env
 			mongo_uri = URI.parse(ENV["MONGOLAB_URI"])		
