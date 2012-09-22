@@ -21,7 +21,8 @@ def parties_votes(kind)
 	keys = ['party_id']
 	# add aditional key if available (age_bracket, region_id, subregion_id)
 	keys << addkey if addkey 
-	result = Vote.collection.group(keys, nil, {:vcount => 0}, reduce_function)
+	result = Vote.collection.group(:key => keys, :conditions => nil, 
+		:initial => {:vcount => 0}, :reduce => reduce_function)
 	
 	# create a result hash to be used for fill in
 	results_hash = {}

@@ -7,14 +7,11 @@ def configure_mongoid(force_environment_mode = nil)
 	end
 
 	Mongoid.configure do |config|
-		p ENV
-		puts "your env is: #{ENV['RACK_ENV']}"
 		if force_environment_mode
 			production_env = ENV['RACK_ENV'] == :production.to_s
 		else
 			production_env = production?
 		end
-		puts "(dbg) production_env: #{production_env}"
 		if production_env
 			mongo_uri = URI.parse(ENV["MONGOLAB_URI"])		
 			ENV['MONGOID_HOST'] = mongo_uri.host
@@ -23,7 +20,7 @@ def configure_mongoid(force_environment_mode = nil)
 			ENV['MONGOID_PASSWORD'] = mongo_uri.password
 			ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
 		end
-		Mongoid.logger.level = Logger::WARNING
+		Mongoid.logger.level = Logger::WARN
 		Mongoid.load!('mongoid.yml')
 	end
 end
