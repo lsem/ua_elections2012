@@ -35,8 +35,8 @@ get '/vote' do
 
 	# check whether all mandatory parameters are set	
 	votes_mandatory_params.each do |p| 
-		unless params[p]
-			return "{ \"status\" : #{Errors::MANDATORY_PARAM_MISSING} }"
+		unless params[p]			
+			return json.generate(:status => Errors::MANDATORY_PARAM_MISSING)
 		end
 	end
 	
@@ -47,7 +47,7 @@ get '/vote' do
 	else
 		status_code = Errors::INVALID_PARAM_VALUES
 	end		
-	"{ \"status\" : #{status_code} }"
+	json.generate(:status => status_code)	
 end
 
 get '/export_results' do
@@ -76,7 +76,7 @@ get '/export_results' do
 	 	logger.info "results are actual. next export can be done only at: #{last_update + EXPORT_RESULTS_PERIOD_SEC}"
 	 	status_code = Errors::ACTUAL
 	 end
-	 "{\"status\" : #{status_code}}"
+	 json.generate(:status => status_code)	 
 end
 
 get '/results/:kind' do |kind|
@@ -115,5 +115,9 @@ get '/admin/:command' do |command|
 	else
 		status = Errors::UNKNOWN_COMMAND
 	end
-	"{ \"status\" : #{status} }"
+	json.generate(:status => status)	
 end 
+
+get '/ping' do 
+	json.generate(:status => Errors::SUCCESS)
+end
