@@ -8,7 +8,7 @@ require 'uri'
 require './models'
 require "sinatra/reloader" if development?
 require './mongoid_conf'
-require './results_exporting'
+require './results_export'
 
 EXPORT_RESULTS_PERIOD_SEC = 10
 

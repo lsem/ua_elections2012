@@ -6,7 +6,7 @@
 
 require 'mongoid'
 require './mongoid_conf'
-require './results_exporting'
+require './results_export'
 
 puts "> configuring mongo access driver.."
 
