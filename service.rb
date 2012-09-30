@@ -30,7 +30,7 @@ end
 #     handlers 
 # ==========================================================
 
-get '/vote' do
+post '/vote' do
 	content_type :json
 	votes_mandatory_params = [:phone_id, :party_id, :age_bracket, :region_id, :sub_region_id ]
 
