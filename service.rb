@@ -65,6 +65,7 @@ get '/export_results' do
 		logger.info "time passed (seconds): #{time_passed}"
 		can_update = time_passed >= EXPORT_RESULTS_PERIOD_SEC
 	end
+
 	if can_update
 		logger.info "[export_results] exporting age results"
 		export_age_results
@@ -93,15 +94,20 @@ get '/results/:kind' do |kind|
 	else
 		return JSON.generate(:status => Errors::INVALID_RESULT_TYPE)
 	end
-	
-	unless last_result
-		# in case nothing of results just return status
-		response = JSON.generate(:status => Errors::SUCCESS)
-	else
-		document = JSON.parse(last_result.document_string)
-		response = JSON.generate(:status => Errors::SUCCESS,
-				:timestamp => last_result.created_at, :data => document)
+
+	if cached = CachedResult.get(kind.to_sym)
+		response = cached.result_document
+		logger.debug "[get results] result available in cache. response: #{response}"
+		return response
 	end
+
+	# retrieve json document with latest result
+	resjsondoc = last_result ? last_result.document_string : nil
+
+	results_hash = build_results_document(kind, resjsondoc)
+	timestamp = last_result ? last_result.created_at : Time.now
+	response = JSON.generate(:status => Errors::SUCCESS, :timestamp => timestamp, :data => results_hash)
+	CachedResult.set(kind.to_sym, response)
 	return response
 end
 
@@ -112,9 +118,12 @@ get '/admin/:command' do |command|
 	status = Errors::SUCCESS
 	case command.to_sym
 	when :clear_votes then Vote.delete_all
-	when :clear_results then PredefinedResult.delete_all
+	when :clear_results 
+		PredefinedResult.delete_all
+		CachedResult.invalidate :all
 	when :clear_all 
 		PredefinedResult.delete_all
+		CachedResult.invalidate :all
 		Vote.delete_all
 	else
 		status = Errors::UNKNOWN_COMMAND

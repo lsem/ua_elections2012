@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
 echo '> sending heartdbeet signal..'
-curl 'http://pure-eyrie-6999.herokuapp.com/ping'
+curl --silent 'http://pure-eyrie-6999.herokuapp.com/ping'
 

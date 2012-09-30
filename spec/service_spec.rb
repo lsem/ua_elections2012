@@ -67,51 +67,81 @@ describe "Sinatra service" do
 			last_response.body.should include "#{Errors::SUCCESS}"
 		end
 
-		results = parties_votes(:total)
-		# party 1 should have 3 votes total
-		results[1].should be_equal 3
-		results[2].should be_equal 0
-		results[3].should be_equal 2
-		results[4].should be_equal 0
-		results[20].should be_equal 1
-		a_rest_parties = PARTIES.to_a - parties_to_be_voted
-		a_rest_parties.each { |x| results[x].should be_equal 0 }
+		#
+		# Step 2. export results to history tables
+		#
 
-		results = parties_votes(:age)
-		results[1][1].should be_equal 1
-		results[3][2].should be_equal 1
-		results[20][3].should be_equal 1
-		results[1][4].should be_equal 2
-		results[3][3].should be_equal 1
-		# all others should have zero
+		export_age_results
+		export_regions_results
+		export_total_results
+		export_subregion_results
+
+		#
+		# Step 3. get results, parse them and check for validness
+		#
+
+		get '/results/total'
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::SUCCESS}"
+		totalrjson = JSON.parse(last_response.body)["data"]
+
+		get '/results/age'
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::SUCCESS}"
+		agerjson = JSON.parse(last_response.body)["data"]
+		
+		get '/results/region'
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::SUCCESS}"
+		regionrjson = JSON.parse(last_response.body)["data"]
+
+		get '/results/subregion'
+		last_response.should be_ok
+		last_response.body.should include "#{Errors::SUCCESS}"
+		subregionrjson = JSON.parse(last_response.body)["data"]
+
+		# party 1 should have 3 votes total
+		totalrjson["1"].should be_equal 3
+		totalrjson["2"].should be_equal 0
+		totalrjson["3"].should be_equal 2
+		totalrjson["4"].should be_equal 0
+		totalrjson["20"].should be_equal 1
+		a_rest_parties = PARTIES.to_a - parties_to_be_voted
+		a_rest_parties.each { |x| totalrjson[x.to_s].should be_equal 0 }
+
+		#results = parties_votes(:age)
+		agerjson["1"]["1"].should be_equal 1
+		agerjson["3"]["2"].should be_equal 1
+		agerjson["20"]["3"].should be_equal 1
+		agerjson["1"]["4"].should be_equal 2
+		agerjson["3"]["3"].should be_equal 1
+		# # all others should have zero
 
 		a_rest_age_bracks = AGE_BRACKETS.to_a - voters_ages	
 		PARTIES.each { |pid| 
-			a_rest_age_bracks.each { |ab| results[pid][ab].should be_equal 0 } 
+			a_rest_age_bracks.each { |ab| agerjson[pid.to_s][ab.to_s].should be_equal 0 } 
 		}
 
-		results = parties_votes(:region)
-		results[1][1].should be_equal 1
-		results[3][2].should be_equal 2
-		results[20][3].should be_equal 1
-		results[1][3].should be_equal 1
-		results[1][2].should be_equal 1
+		# results = parties_votes(:region)
+		regionrjson["1"]["1"].should be_equal 1
+		regionrjson["3"]["2"].should be_equal 2
+		regionrjson["20"]["3"].should be_equal 1
+		regionrjson["1"]["3"].should be_equal 1
+		regionrjson["1"]["2"].should be_equal 1
 		a_rest_of_regions = REGIONS.to_a - regions_ages
 		PARTIES.each { |pid| 
-			a_rest_of_regions.each { |rid| results[pid][rid].should be_equal 0 }
+			a_rest_of_regions.each { |rid| regionrjson[pid.to_s][rid.to_s].should be_equal 0 }
 		}
 
-		results = parties_votes(:subregion)
-		results[1][1].should be_equal 1
-		results[3][1].should be_equal 1
-		results[20][1].should be_equal 1
-		results[1][7].should be_equal 2
-		results[3][2].should be_equal 1
+
+		subregionrjson["1"]["1"].should be_equal 1
+		subregionrjson["3"]["1"].should be_equal 1
+		subregionrjson["20"]["1"].should be_equal 1
+		subregionrjson["1"]["7"].should be_equal 2
+		subregionrjson["3"]["2"].should be_equal 1
 		a_rest_of_subregions = SUB_REGIONS.to_a - subregions_ages
 		PARTIES.each { |pid| 
-			a_rest_of_subregions.each { |srid| results[pid][srid].should be_equal 0 }
+			a_rest_of_subregions.each { |srid| subregionrjson[pid.to_s][srid.to_s].should be_equal 0 }
 		}
-
-
 	end
 end

@@ -5,6 +5,16 @@ module ResultType
 	AGE = 1
 	REGION = 2
 	SUBREGION = 3
+
+	def self.parse(type)
+		case type.to_sym
+		when :total then TOTAL
+		when :age then AGE
+		when :region then REGION
+		when :subregion then SUBREGION
+		else raise ArgumentError, "#{type.inspect} is not valid ResultType value"
+		end
+	end
 end
 
 class Vote
@@ -55,8 +65,9 @@ class PredefinedResult
 	field :result_type, :type => Integer
 
 	validates_presence_of :document_string
-	validates_inclusion_of :result_type, :in => [ResultType::TOTAL, ResultType::AGE, 
-												ResultType::REGION, ResultType::SUBREGION]
+	validates_inclusion_of :result_type, 
+				:in => [ResultType::TOTAL, ResultType::AGE, 
+						ResultType::REGION, ResultType::SUBREGION]
 
 	scope :total, where(:result_type => ResultType::TOTAL)
 	scope :age, where(:result_type => ResultType::AGE)
@@ -64,3 +75,36 @@ class PredefinedResult
 	scope :subregion, where(:result_type => ResultType::SUBREGION)
 end
 
+class CachedResult
+	include Mongoid::Document
+	include Mongoid::Timestamps
+
+	field :result_document, :type => String
+	field :result_type, :type => Integer
+
+	validates_presence_of :result_document
+	validates_presence_of :result_type
+
+	validates_inclusion_of :result_type, 
+				:in => [ResultType::TOTAL, ResultType::AGE, 
+						ResultType::REGION, ResultType::SUBREGION]
+
+	def self.get(kind)
+		where(:result_type => ResultType.parse(kind)).last
+	end
+
+	# accepts: (:all, :total, :region, :subregion, :age)
+	def self.invalidate(kind)
+		if kind == :all 
+			delete_all
+			return
+		end
+		where(:result_type => ResultType.parse(kind)).delete_all		
+	end
+
+	def self.set(kind, response)
+		res = CachedResult.find_or_create_by(:result_type => ResultType.parse(kind))
+		res.result_document = response
+		res.save
+	end
+end
