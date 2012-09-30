@@ -2,10 +2,10 @@ require 'mongoid'
 require './models'
 
 
-PARTIES = (1..22)
-REGIONS = (1..24)
+PARTIES = (1..24)
+REGIONS = (1..27)
 AGE_BRACKETS = (1..7)
-SUB_REGIONS = (1..1500)
+SUB_REGIONS = (1..490)
 
 
 def parties_votes(kind)
