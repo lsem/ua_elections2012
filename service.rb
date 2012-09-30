@@ -19,6 +19,7 @@ module Errors
 	INVALID_RESULT_TYPE = -3
 	ACTUAL = -4
 	INVALID_PARAM_VALUES = -5
+	NOT_AVAILABLE = -6
 end
 
 configure do
@@ -52,6 +53,8 @@ end
 
 get '/export_results' do
 	content_type :json
+	return JSON.generate(:status => Errors::NOT_AVAILABLE) if production?
+
 	logger.info "export results command has been triggered"
 	status_code = Errors::SUCCESS
 
@@ -105,6 +108,8 @@ end
 
 get '/admin/:command' do |command|
 	content_type :json
+	return JSON.generate(:status => Errors::NOT_AVAILABLE)  if production?
+
 	status = Errors::SUCCESS
 	case command.to_sym
 	when :clear_votes then Vote.delete_all
