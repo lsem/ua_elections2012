@@ -11,9 +11,9 @@ describe "Sinatra service" do
 	it "should export result properly" do
 		pending "temporarly disables"
 		# save current count
-		total_results_count = PredefinedResult.total.count
-		age_results_count = PredefinedResult.age.count
-		region_results_count = PredefinedResult.region.count
+		total_results_count = ResultHist.total.count
+		age_results_count = ResultHist.age.count
+		region_results_count = ResultHist.region.count
 
 		puts "total_results_count: #{total_results_count}"
 		puts "age_results_count: #{age_results_count}"
@@ -23,9 +23,9 @@ describe "Sinatra service" do
 		export_regions_results()
 		export_age_results()
 
-		PredefinedResult.total.count.should be_equal(total_results_count + 1)
-		PredefinedResult.age.count.should be_equal(age_results_count + 1) # should not be changed
-		PredefinedResult.region.count.should be_equal(region_results_count + 1) # should not be changed	
+		ResultHist.total.count.should be_equal(total_results_count + 1)
+		ResultHist.age.count.should be_equal(age_results_count + 1) # should not be changed
+		ResultHist.region.count.should be_equal(region_results_count + 1) # should not be changed	
 	end
 
 	it "vote should return fail without mandatory params provided" do

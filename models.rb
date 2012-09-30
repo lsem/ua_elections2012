@@ -57,7 +57,7 @@ class Vote
 	
 end
 
-class PredefinedResult
+class ResultHist
 	include Mongoid::Document
 	include Mongoid::Timestamps
 

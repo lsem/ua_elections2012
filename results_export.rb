@@ -66,24 +66,24 @@ end
 
 def export_age_results
 	results = parties_votes(:age)
-	PredefinedResult.create(:result_type => ResultType::AGE, :document_string => results.to_json)
+	ResultHist.create(:result_type => ResultType::AGE, :document_string => results.to_json)
 	CachedResult.invalidate(:age) # invalidate cache
 end
 
 def export_regions_results
 	results = parties_votes(:region)	
-	PredefinedResult.create(:result_type => ResultType::REGION, :document_string => results.to_json)
+	ResultHist.create(:result_type => ResultType::REGION, :document_string => results.to_json)
 	CachedResult.invalidate(:region) # invalidate cache
 end
 
 def export_total_results
 	results = parties_votes(:total)	
-	PredefinedResult.create(:result_type => ResultType::TOTAL, :document_string => results.to_json)
+	ResultHist.create(:result_type => ResultType::TOTAL, :document_string => results.to_json)
 	CachedResult.invalidate(:total) # invalidate cache
 end
 
 def export_subregion_results
 	results = parties_votes(:subregion)	
-	PredefinedResult.create(:result_type => ResultType::SUBREGION, :document_string => results.to_json)
+	ResultHist.create(:result_type => ResultType::SUBREGION, :document_string => results.to_json)
 	CachedResult.invalidate(:subregion) # invalidate cache
 end

@@ -59,8 +59,8 @@ get '/export_results' do
 	status_code = Errors::SUCCESS
 
 	can_update = true
-	if PredefinedResult.count > 0
-		last_update = PredefinedResult.last.created_at
+	if ResultHist.count > 0
+		last_update = ResultHist.last.created_at
 		time_passed = Time.now - last_update
 		logger.info "time passed (seconds): #{time_passed}"
 		can_update = time_passed >= EXPORT_RESULTS_PERIOD_SEC
@@ -87,10 +87,10 @@ get '/results/:kind' do |kind|
 	content_type :json
 		
 	last_result = case kind.to_sym
-	when :total then PredefinedResult.total.last
-	when :age then PredefinedResult.age.last
-	when :region then PredefinedResult.region.last
-	when :subregion then PredefinedResult.subregion.last
+	when :total then ResultHist.total.last
+	when :age then ResultHist.age.last
+	when :region then ResultHist.region.last
+	when :subregion then ResultHist.subregion.last
 	else
 		return JSON.generate(:status => Errors::INVALID_RESULT_TYPE)
 	end
@@ -119,10 +119,10 @@ get '/admin/:command' do |command|
 	case command.to_sym
 	when :clear_votes then Vote.delete_all
 	when :clear_results 
-		PredefinedResult.delete_all
+		ResultHist.delete_all
 		CachedResult.invalidate :all
 	when :clear_all 
-		PredefinedResult.delete_all
+		ResultHist.delete_all
 		CachedResult.invalidate :all
 		Vote.delete_all
 	else
