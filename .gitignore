@@ -1,2 +1,7 @@
 .env
 *.sublime-*
+config/.dburi.yaml
+backups/
+logs/
+dump/
+config/schedule.rb

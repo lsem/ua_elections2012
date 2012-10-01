@@ -21,7 +21,7 @@ def configure_mongoid(force_environment_mode = nil)
 			ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub("/", "")
 		end
 		Mongoid.logger.level = Logger::WARN
-		Mongoid.load!('mongoid.yml')
+		Mongoid.load!('./config/mongoid.yml')
 	end
 end
 
