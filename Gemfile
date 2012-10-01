@@ -10,6 +10,7 @@ gem 'thin'
 gem "json"
 gem 'haml'
 gem 'whenever', require: false
+gem 'rake'
 
 group :test, :development do
 	gem 'factory_girl'

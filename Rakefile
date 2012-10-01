@@ -46,14 +46,14 @@ def make_dump_util_command_line(type, format, params = {})
 end
 
 def dump_database(type, format, params = {})	
-	$logger.debug "a user requested dumping database. format: #{format}, type: #{type}"
+	$logger.debug "a user requested database data export. format: #{format}, type: #{type}"
 	cmdline = make_dump_util_command_line(type, format, params)
 	$logger.info "command line: #{cmdline}"
 	unless result = system(cmdline)
 		$logger.error "failed to execute dumputil. exit status: "\
 				"#{$?.exitstatus}, cmdline used: #{cmdline}"
 	else
-		$logger.info "databse seems to be exported"
+		$logger.info "finished data export procedure"
 	end
 end
 
