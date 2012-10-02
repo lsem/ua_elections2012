@@ -3,6 +3,10 @@
   width:60%;
 }
 
+.percents {
+	font-size: 70%;
+}
+
 table {
 	width:600px;
 	border-top:1px solid #e5eff8;
