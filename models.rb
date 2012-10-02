@@ -1,5 +1,11 @@
 require './results_export'
 
+PARTIES = (1..24)
+REGIONS = (1..27)
+AGE_BRACKETS = (1..7)
+SUB_REGIONS = (1..490)
+
+
 module ResultType
 	TOTAL = 0
 	AGE = 1
