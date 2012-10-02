@@ -1,7 +1,6 @@
 require 'mongoid'
 require './models'
 
-
 PARTIES = (1..24)
 REGIONS = (1..27)
 AGE_BRACKETS = (1..7)
@@ -35,8 +34,7 @@ def build_results_document(kind, results_json)
 		when :subregion then [SUB_REGIONS, 'sub_region_id']
 		else raise ArgumentError, "Unknown argument passed"
 		end
-
-	puts "> creating blank"
+	
 	# create blank results hash
 
 	results_hash = {}
@@ -49,8 +47,7 @@ def build_results_document(kind, results_json)
 	end	
 
 	return results_hash unless results_json # return blank if no results 
-
-	puts "> parsing json"
+	
 	# fillin blank results hash with extracted last results
 	# # next, go through existing results and fill them to results_hash			
 	JSON.parse(results_json).each do |row|

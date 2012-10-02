@@ -1,8 +1,4 @@
-
-PARTIES = (1..24)
-REGIONS = (1..27)
-AGE_BRACKETS = (1..7)
-SUB_REGIONS = (1..490)
+require './results_export'
 
 module ResultType
 	TOTAL = 0

@@ -6,7 +6,16 @@
 		%th Кілкість голосів
 		-@total_results.each do |x|
 			%tr
+				- percents = @total != 0 ? (x["vcount"] / @total * 100.0).to_i : 0
 				%td= $DICT["parties"][x["party_id"].to_i]
-				%td= x["vcount"].to_i
+				%td 
+					#{x["vcount"].to_i} 
+					%span.percents (#{percents} %)
+		%tr
+			%td
+			%td= @total
+				
+
+
 -else
 	%h4 Результати недоступні на даний момент

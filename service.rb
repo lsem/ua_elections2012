@@ -162,6 +162,7 @@ get '/analytics' do
 	begin
 		if ResultHist.total.last
 			@total_results = JSON.parse(ResultHist.total.last.document_string).sort { |x, y| y["vcount"].to_i <=> x["vcount"].to_i }
+			@total = @total_results.inject(0) { |result, elem| result + elem["vcount"].to_i }			
 		end
 	rescue
 		@total_results = nil

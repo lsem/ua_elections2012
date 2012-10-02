@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'factory_girl'
 require 'digest'
+require './export_results'
 
 describe "Sinatra service" do 
 	
@@ -106,7 +107,7 @@ describe "Sinatra service" do
 		totalrjson["3"].should be_equal 2
 		totalrjson["4"].should be_equal 0
 		totalrjson["20"].should be_equal 1
-		a_rest_parties = PARTIES.to_a - parties_to_be_voted
+		a_rest_parties = AppRanges::PARTIES.to_a - parties_to_be_voted
 		a_rest_parties.each { |x| totalrjson[x.to_s].should be_equal 0 }
 
 		#results = parties_votes(:age)
@@ -117,8 +118,8 @@ describe "Sinatra service" do
 		agerjson["3"]["3"].should be_equal 1
 		# # all others should have zero
 
-		a_rest_age_bracks = AGE_BRACKETS.to_a - voters_ages	
-		PARTIES.each { |pid| 
+		a_rest_age_bracks = AppRanges::AGE_BRACKETS.to_a - voters_ages	
+		AppRanges::PARTIES.each { |pid| 
 			a_rest_age_bracks.each { |ab| agerjson[pid.to_s][ab.to_s].should be_equal 0 } 
 		}
 
@@ -128,8 +129,8 @@ describe "Sinatra service" do
 		regionrjson["20"]["3"].should be_equal 1
 		regionrjson["1"]["3"].should be_equal 1
 		regionrjson["1"]["2"].should be_equal 1
-		a_rest_of_regions = REGIONS.to_a - regions_ages
-		PARTIES.each { |pid| 
+		a_rest_of_regions = AppRanges::REGIONS.to_a - regions_ages
+		AppRanges::PARTIES.each { |pid| 
 			a_rest_of_regions.each { |rid| regionrjson[pid.to_s][rid.to_s].should be_equal 0 }
 		}
 
@@ -139,8 +140,8 @@ describe "Sinatra service" do
 		subregionrjson["20"]["1"].should be_equal 1
 		subregionrjson["1"]["7"].should be_equal 2
 		subregionrjson["3"]["2"].should be_equal 1
-		a_rest_of_subregions = SUB_REGIONS.to_a - subregions_ages
-		PARTIES.each { |pid| 
+		a_rest_of_subregions = AppRanges::SUB_REGIONS.to_a - subregions_ages
+		AppRanges::PARTIES.each { |pid| 
 			a_rest_of_subregions.each { |srid| subregionrjson[pid.to_s][srid.to_s].should be_equal 0 }
 		}
 	end
