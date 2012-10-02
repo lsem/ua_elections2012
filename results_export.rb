@@ -53,14 +53,14 @@ def build_results_document(kind, results_json)
 		vcount = row["vcount"].to_i
 		
 		if addkey
-			if inner_loop.include?(party_id)
+			# if inner_loop.include?(party_id)
 				results_hash[party_id][row[addkey].to_i] = vcount
-			end
+			# end
 		else
 			# TODO: get rid of hardcoded value
-			if PARTIES.include?(party_id)
+			# if PARTIES.include?(party_id)
 				results_hash[party_id] = vcount
-			end
+			# end
 		end
 	end
 	results_hash
