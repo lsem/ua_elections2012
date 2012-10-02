@@ -1,4 +1,4 @@
-
+require './results_export'
 
 module ResultType
 	TOTAL = 0
@@ -38,7 +38,11 @@ class Vote
 	validates_numericality_of :region_id
 	validates_numericality_of :sub_region_id
 
-	 
+	  validates_inclusion_of :party_id, :in => PARTIES
+	  validates_inclusion_of :age_bracket, :in => AGE_BRACKETS
+	  validates_inclusion_of :region_id, :in => REGIONS
+	  validates_inclusion_of :sub_region_id, :in => SUB_REGIONS
+		
 	index({ :party_id => 1}, { :unique => true})
 	index({ :party_id => 1, :age_bracket => 1}, {})
 	index({ :party_id => 1, :region_id => 1}, {})

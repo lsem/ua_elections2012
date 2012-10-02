@@ -26,7 +26,6 @@ def parties_votes(kind)
 	return result
 end
 
-
 # builds json document with results for specified category (total, age, region, subregion)
 def build_results_document(kind, results_json)
 	inner_loop, addkey  = case kind.to_sym
@@ -37,27 +36,31 @@ def build_results_document(kind, results_json)
 		else raise ArgumentError, "Unknown argument passed"
 		end
 
+	puts "> creating blank"
 	# create blank results hash
-	results_hash = {}
-	PARTIES.each do |pid|
-		results_hash[pid] = 0
-		if inner_loop
-			results_hash[pid] = {}
-			inner_loop.each { |j| results_hash[pid][j] = 0 }
-		end
-	end
+
+	results_hash = Hash.new{ |h, k| 
+		h[k] = inner_loop ? Hash.new { |h2, k2| h2[k2] = 0  }  : 0
+	}
 
 	return results_hash unless results_json # return blank if no results 
 
+	puts "> parsing json"
 	# fillin blank results hash with extracted last results
 	# # next, go through existing results and fill them to results_hash			
 	JSON.parse(results_json).each do |row|
 		party_id = row["party_id"].to_i
 		vcount = row["vcount"].to_i
+		
 		if addkey
-			results_hash[party_id][row[addkey].to_i] = vcount
+			if inner_loop.include?(party_id)
+				results_hash[party_id][row[addkey].to_i] = vcount
+			end
 		else
-			results_hash[party_id] = vcount
+			# TODO: get rid of hardcoded value
+			if PARTIES.include?(party_id)
+				results_hash[party_id] = vcount
+			end
 		end
 	end
 	results_hash
