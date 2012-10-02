@@ -1,0 +1,12 @@
+%h3 Загальний залік
+
+-if @total_results
+	%table
+		%th Партія
+		%th Кілкість голосів
+		-@total_results.each do |x|
+			%tr
+				%td= $DICT["parties"][x["party_id"].to_i]
+				%td= x["vcount"].to_i
+-else
+	%h4 Результати недоступні на даний момент

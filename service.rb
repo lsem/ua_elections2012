@@ -12,6 +12,10 @@ require './results_export'
 
 EXPORT_RESULTS_PERIOD_SEC = 10
 
+$DICT = YAML.load_file("dictionary.yaml")
+$CRED = YAML.load_file("credentials.yaml")
+
+
 module Errors
 	SUCCESS = 0
 	MANDATORY_PARAM_MISSING = -1	
@@ -25,6 +29,23 @@ end
 configure do
 	configure_mongoid # see mongoid_conf.rb
 end
+
+helpers do
+  def protected!
+    unless authorized?
+      response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+      throw(:halt, [401, "Not authorized\n"])
+    end
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$CRED["user"], $CRED["password"]]
+  end
+
+end
+
+set :haml, {:format => :html5, :attr_wrapper => '"'}
 
 # ==========================================================
 #     handlers 
@@ -52,8 +73,9 @@ post '/vote' do
 end
 
 get '/export_results' do
+	protected!
 	content_type :json
-	return JSON.generate(:status => Errors::NOT_AVAILABLE) if production?
+	#return JSON.generate(:status => Errors::NOT_AVAILABLE) if production?
 
 	logger.info "export results command has been triggered"
 	status_code = Errors::SUCCESS
@@ -133,4 +155,16 @@ end
 
 get '/ping' do 
 	JSON.generate(:status => Errors::SUCCESS)
+end
+
+get '/analytics' do	
+	protected!
+	begin
+		if ResultHist.total.last
+			@total_results = JSON.parse(ResultHist.total.last.document_string).sort { |x, y| y["vcount"].to_i <=> x["vcount"].to_i }
+		end
+	rescue
+		@total_results = nil
+	end
+	haml :index
 end

@@ -1,0 +1,26 @@
+#container {
+  margin: 30px 25% 30px 25%;  
+  width:60%;
+}
+
+table {
+	width:600px;
+	border-top:1px solid #e5eff8;
+	border-right:1px solid #e5eff8;	
+	border-collapse:collapse;
+}
+
+th {	
+	border-bottom:1px solid #e5eff8;
+	border-left:1px solid #e5eff8;
+	padding:.3em 1em;
+	text-align:center;	
+	height: 50px;
+}
+td {
+	color:#678197;
+	border-bottom:1px solid #e5eff8;
+	border-left:1px solid #e5eff8;
+	padding:.3em 1em;
+	text-align:center;
+}
