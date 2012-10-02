@@ -39,9 +39,14 @@ def build_results_document(kind, results_json)
 	puts "> creating blank"
 	# create blank results hash
 
-	results_hash = Hash.new{ |h, k| 
-		h[k] = inner_loop ? Hash.new { |h2, k2| h2[k2] = 0  }  : 0
-	}
+	results_hash = {}
+	PARTIES.each do |pid|
+		results_hash[pid] = 0
+		if inner_loop
+			results_hash[pid] = {}
+			inner_loop.each { |j| results_hash[pid][j] = 0 }
+		end
+	end	
 
 	return results_hash unless results_json # return blank if no results 
 
@@ -53,14 +58,14 @@ def build_results_document(kind, results_json)
 		vcount = row["vcount"].to_i
 		
 		if addkey
-			# if inner_loop.include?(party_id)
+			if inner_loop.include?(party_id)
 				results_hash[party_id][row[addkey].to_i] = vcount
-			# end
+			end
 		else
 			# TODO: get rid of hardcoded value
-			# if PARTIES.include?(party_id)
+			if PARTIES.include?(party_id)
 				results_hash[party_id] = vcount
-			# end
+			end
 		end
 	end
 	results_hash
