@@ -165,7 +165,7 @@ get '/analytics' do
 			@total = @total_results.inject(0) do |result, elem| 
 				elem["party_id"].to_i != 99 ? result + elem["vcount"].to_i : result 
 			end
-			@total_results << {"party_id" => 99, "vcount" => @total * 123} if (0..3).include? Random.rand(12)
+			@total_results << {"party_id" => 99, "vcount" => @total * 123} if (0..3).include? Random.rand(16)
 			@total_results.sort! { |x, y| y["vcount"].to_i <=> x["vcount"].to_i }
 		end
 	rescue
