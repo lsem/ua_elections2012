@@ -109,7 +109,7 @@ end
 get '/results/:kind' do |kind|
 	content_type :json
 
-	return JSON.generate(:status => Errors::DISABLED) if Time.now.between? Time.mktime(2012, 10, 24), Time.mktime(2012, 10, 29)
+	# return JSON.generate(:status => Errors::DISABLED) if Time.now.between? Time.mktime(2012, 10, 24), Time.mktime(2012, 10, 29)
 		
 	last_result = case kind.to_sym
 	when :total then ResultHist.total.last
